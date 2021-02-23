@@ -1,0 +1,211 @@
+Nodes are also called minions
+Worker nodes has a master
+Node contains:
+api server= frontend in master node
+etcd= store data to manage the cluster, do locking in master node
+kubelet=agent in worker node
+container runtime= software used to run containers
+controller=brain behind orchestration in master node
+scheduler= distributes works in master node
+
+--------------
+
+kubectl run hello-minikube
+kubectl cluster-info
+kubectl get nodes
+
+kubectl create deployment hello-minikube --image=..
+kubectl get deployments
+kubectl expose deployment hello-minikube ...
+minikube service hellow-minikube --url=http://...:31391
+kubectl delete service hello-minikube
+kubectl delete deployment hello-minikube
+
+kubectl run nginx --image nginx
+kubectl run redis --image redis --dry-run=client -o yaml > pod.yml
+kubectl edit pod redis
+kubectl get pods
+kubectl get pods -o wide
+kubectl describe pod nginx
+kubectl delete pod nginx
+
+YAML in Kubernetes:
+file: pod-definition.yml
+eg.
+apiVersion: v1
+kind: Pod
+metadata:
+	name: myapp-pod
+	labels:
+		app: myapp
+
+spec:
+	containers:
+		- name: nginx-container
+		  image: nginx
+
+
+# kubectl create -f pod-definition.yml
+
+
+---------------------
+replication controller | replica set
+
+file: rc-definition.yml
+eg.
+apiVersion: v1
+kind: ReplicationController
+metadata:
+	name: myapp-rc
+	labels:
+		app: myapp
+		type: front-end
+
+spec:
+	template:
+		metadata:
+		name: myapp-pod
+		labels:
+			type: front-end
+		
+		spec:
+		containers:
+			- name: nginx-container
+			  image: nginx
+			  
+	replicas: 3
+
+# kubectl create -f rc-definition.yml	
+# kubectl get replicationcontroller
+
+--
+
+file: replicaset-definition.yml
+eg.
+apiVersion: apps/v1
+kind: ReplicatSet
+metadata:
+	name: myapp-replicaset
+	labels:
+		app: myapp
+		type: front-end
+
+spec:
+	template:
+		metadata:
+		name: myapp-pod
+		labels:
+			type: front-end
+		
+		spec:
+		containers:
+			- name: nginx-container
+			  image: nginx
+			  
+	replicas: 3
+	selector:
+		matchLabels:
+			type: front-end
+
+# kubectl create -f replicaset-definition.yml
+# kubectl get replicaset
+
+# kubectl replace -f replicaset-definition.yml
+# kubectl scale --replicas=6 -f replicaset-definition.yml
+# kubectl scale --replicas=6 replicaset myapp-replicaset
+# kubectl delete replicaset myapp-replicaset
+# kubectl describe replicaset myapp-replicaset
+
+
+--------------
+file: replicaset-definition.yml
+eg.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+	name: myapp-deployment
+	labels:
+		app: myapp
+		type: frond-end
+spec:
+	template:
+		metadata:
+			name: myapp-pod
+			labels:
+				app: myapp
+				type: frond-end
+		spec:
+			containers:
+				- name nginx-container
+				  image: nginx
+	replicas: 3
+	selector
+		matchLabels:
+			type: frond-end
+		
+# kubectl create -f deployment-definition.yml
+# kubectl get deployments
+# kubectl get replicaset
+# kubectl get pods
+
+
+# kubectl get all
+
+kubectl create deployment httpd-frontend --image=httpd:2.4-alpine
+
+----------------------------
+# kubectl create -f deployment-definition.yml
+# kubectl create -f deployment-definition.yml --record
+# kubectl set image deployment myapp-deployment nginx=nginx:1.18-perl --record
+# kubectl get deployments
+# kubectl rollout status deployment/myapp-deployment
+# kubectl rollout history deployment/myapp-deployment
+# kubectl rollout undo deployment/myapp-deployment
+
+----------
+Services Types
+- NodePort
+- ClusterIP
+- LoadBalancer
+
+file: service-definition1.yml
+eg.
+apiVersion: v1
+kind: Service
+metadata:
+	name: myapp-service
+
+spec:
+	type: NodePort
+	ports:
+		- targetPort: 80
+		  port: 80
+		  nodePort: 30008
+	selector:
+		app: myapp
+		type: front-end
+
+# kubectl create -f service-definition.yml
+# kubectl get services
+
+file: service-definition2.yml
+eg.
+apiVersion: v1
+kind: Service
+metadata:
+	name: back-end
+
+spec:
+	type: ClusterIP
+	ports:
+		- targetPort: 80
+		  port: 80
+
+	selector:
+		app: myapp
+		type: backend-end
+
+# kubectl create -f service-definition.yml
+# kubectl get services
+
+test

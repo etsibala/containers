@@ -1,0 +1,128 @@
+### DOCKER BASICS
+
+# docker pull <image>
+  - download an image from registry
+
+# docker image
+  - list downloaded image
+
+# docker image inspect <image>
+  - show details of the image
+
+# docker run <container>
+  - attach mode to run in foreground
+
+# docker run -d <container>
+  - detach mode to run in background
+
+# docket attach <container>
+  - attach or put in foreground
+
+# docker inspect <container>
+  - show details of the container
+
+# docker ps
+  - list running container
+
+# docker ps -a
+  - list all containers
+
+# docker exec 
+# docker stop <container>
+  - stop a container
+
+# docker logs <container>
+  - vhiew the logs of the container
+
+# docker rm <container>
+  - remove a container permanently
+
+# docker rmi <image>
+  - remove an image permanently
+
+# docker run ubuntu sleep 5
+  - run an unbuntu container and execute "sleep 5" command
+  
+# docker exec ubuntu cat /etc/hosts
+  - execute "cat /etc/hosts" on ubuntu container
+
+# docker run -p 8080:80 nginx
+  - route port 80 of container to port 8080 of external network
+ 
+# docker run -p 5353:53/udp nginx
+  - route port udp 53 of container to port 5353 of external network
+  
+# docker run -v /data/nginx/html:/var/www/html nginx
+ - map the folder /var/www/html of the container to /data/nginx/html of externel
+ 
+# docker stats --no-stream
+  - show cpu, mem, network, IO usage
+ 
+
+### DOCKER NETWORK
+  https://docs.docker.com/engine/reference/commandline/network
+
+# docker network ls
+  - view available networks
+
+# docker network create -d <driver>
+  eg. docker network create -d overlay nginx-net
+
+# docker network rm <network>
+  - remove a docker network
+
+  
+### DOCKER SWARM
+  https://docs.docker.com/engine/swarm/swarm-tutorial
+
+# docker swarm init --advertise-addr <MANAGER-IP>
+  eg. docker swarm init --advertise-addr 192.168.86.73
+
+# docker swarm join-token manager
+  - show the join as manager command
+  
+# docker swarm join-token worker
+  - show the join as worker command
+  
+# docker swarm join --token <token_key> <MANAGER-IP>:2377
+  eg.  docker swarm join --token SWMTKN-1-311yexx7jhkz07k99538zwhnc2n2yrxen0qljya2sl2l8v9svg-59obg4wfs5bda6lnkm85affxf 192.168.86.73:2377
+  
+# docker info
+  - to view the current state of the swarm
+  
+# docker node ls
+  - view information about the nodes
+  
+# docker service create nginx
+  eg. 
+  docker service create --replicas 2 --mount type=bind,source=/data/nginx/html,destination=/var/www/html --name nginx nginx
+  
+  docker service create --replicas 2 -p 8080:80 --network nginx-net --name nginx nginx
+
+# docker service ls
+	-- shows list of services
+ 
+# docker service ps <service>
+  eg. docker service ps v67e8atr6290
+	-- show all service and corresponding nodes
+  
+# docker service inspect <service>
+  eg. docker service inspect v67e8atr6290
+  
+# docker service rm <service>
+  eg. docker service rm xfp54yb7baal
+
+# docker service scale <SERVICE-ID>=<NUMBER-OF-TASKS>
+  eg. docker service scale v67e8atr6290=3
+
+### Good references:
+https://docs.docker.com/
+https://iaincollins.medium.com/how-to-run-a-command-on-every-node-in-a-docker-swarm-cluster-60b7f398d1ec
+https://semaphoreci.com/community/tutorials/bootstrapping-a-docker-swarm-mode-cluster
+https://kodekloud.com/
+https://kodekloud.com/p/docker-labs
+
+current reads:
+https://docs.docker.com/get-started/overview/
+https://docs.docker.com/engine/swarm/swarm-tutorial/scale-service/
+https://docs.docker.com/engine/reference/commandline/network
