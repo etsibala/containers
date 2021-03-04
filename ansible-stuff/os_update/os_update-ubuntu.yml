@@ -1,0 +1,20 @@
+---
+- hosts: Ubuntu
+  gather_facts: false
+  serial: 1
+  become: yes
+  max_fail_percentage: 0
+  tasks:
+          - name: Apt Update
+            command: 'apt -y update'
+            register: upgraded
+
+          - name: Apt Upgrade
+            command: 'apt -y upgrade'
+            when: upgraded.changed
+            register: upgraded
+
+          - name: Reboot
+            shell: shutdown -r now
+            when: upgraded.changed
+            register: reboot

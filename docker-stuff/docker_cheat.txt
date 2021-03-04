@@ -27,7 +27,6 @@
 # docker ps -a
   - list all containers
 
-# docker exec 
 # docker stop <container>
   - stop a container
 
@@ -45,6 +44,9 @@
   
 # docker exec ubuntu cat /etc/hosts
   - execute "cat /etc/hosts" on ubuntu container
+
+# docker exec -it ubuntu bash
+  - access shell prompt of a container
 
 # docker run -p 8080:80 nginx
   - route port 80 of container to port 8080 of external network

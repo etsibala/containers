@@ -1,0 +1,30 @@
+---
+- hosts: Ubuntu
+  gather_facts: false
+  serial: 1
+  become: yes
+  max_fail_percentage: 0
+  tasks:
+          - name: Yum Update All
+            yum:
+              name: "*"
+              state: latest
+            register: reboot
+
+          - name: check status
+            debug:
+                    var: reboot
+
+          - name: Reboot
+            shell: shutdown -r now
+            async: 1
+            poll: 0
+            when: reboot.changed
+
+          - name: Wait for system to reboot
+            wait_for_connection:
+                    connect_timeout: 20
+                    sleep: 5
+                    delay: 5
+                    timeout: 60
+            when: reboot.changed
