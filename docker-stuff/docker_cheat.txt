@@ -59,6 +59,24 @@
  
 # docker stats --no-stream
   - show cpu, mem, network, IO usage
+
+
+### Build image
+# cat Dockerfile
+FROM Ubuntu
+
+RUN apt-get update
+RUN apt-get install python
+
+RUN pip install flask
+RUN pip install flask-mysql
+
+COPY . /opt/source-code
+
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+
+# docker build -t etsibala/my-custom-app .
+# docker push etsibala/my-custom-app
  
 
 ### DOCKER NETWORK
@@ -88,7 +106,22 @@
   
 # docker swarm join --token <token_key> <MANAGER-IP>:2377
   eg.  docker swarm join --token SWMTKN-1-311yexx7jhkz07k99538zwhnc2n2yrxen0qljya2sl2l8v9svg-59obg4wfs5bda6lnkm85affxf 192.168.86.73:2377
+
+# docker swarm join-token manager
+  - show instruction on how to add a manager node
   
+# docker node promote <node>
+  - promote a node to manager
+
+# docker node demote <node>
+  - demote a node to worker
+
+# docker swarm leave
+  - leave a swarm cluster
+
+# docker node rm
+  - remove a a node from a swarm cluster
+
 # docker info
   - to view the current state of the swarm
   

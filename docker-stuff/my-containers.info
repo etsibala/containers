@@ -1,0 +1,41 @@
+------- DOCKER STANDALONE
+
+docker run -d --name=plex -p 32400:32400 -e PUID=1000 -e PGID=119 -e VERSION=docker -v /data/plex/config:/config -v /data/plex/tvshows/:/tv -v /data/plex/movies:/movies --restart unless-stopped --name plex ghcr.io/linuxserver/plex:latest
+
+docker run -d --name=nginx -p 80:80 -v /data/nginx/html:/usr/share/nginx/html -v /data/nginx/conf.d:/etc/nginx/conf.d  --restart unless-stopped --name nginx nginx:latest
+
+docker run -d \
+  --name=transmission \
+  -e PUID=1001 \
+  -e PGID=1001 \
+  -e TZ=Etc/UTC \
+  -e TRANSMISSION_WEB_HOME=/combustion-release/ `#optional` \
+  -e USER=kulit `#optional` \
+  -e PASS=143kulit `#optional` \
+  -e WHITELIST=iplist `#optional` \
+  -p 9091:9091 \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
+  -v /data/transmission/config:/config \
+  -v /data/transmission/download:/downloads \
+  -v /data/transmission/watch:/watch \
+  --restart unless-stopped \
+  ghcr.io/linuxserver/transmission
+
+docker run -d --net=host -v /data/rsyslog/log:/var/log -v /data/rsyslog/rsyslog.d:/etc/rsyslog.d --restart unless-stopped --name rsyslog rsyslog
+
+------- DOCKER SWARM
+
+sysadmin@rbpi401:~/containers/docker-stuff$ docker swarm init --advertise-addr 
+172.17.0.1    192.168.86.8  docker0       wlan0         
+sysadmin@rbpi401:~/containers/docker-stuff$ docker swarm init --advertise-addr 192.168.86.8
+Swarm initialized: current node (loeu1dut2v7h1e8xap9t2y33n) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-38ka8dv8oesmolh5k0g8iqqdxhb7ntafl69piffmgr3ps0hzt4-dfym988b8aj9p58hg6ug922ha 192.168.86.8:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+sysadmin@rbpi401:~/containers/docker-stuff$ 
+
