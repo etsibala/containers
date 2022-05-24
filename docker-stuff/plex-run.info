@@ -1,1 +1,0 @@
-docker run -d --name=plex --net=host -e PUID=1000 -e PGID=119 -e VERSION=docker -v /data/plex/config:/config -v /data/plex/tvshows/:/tv -v /data/plex/movies:/movies --restart unless-stopped ghcr.io/linuxserver/plex

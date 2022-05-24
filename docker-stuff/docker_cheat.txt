@@ -107,9 +107,6 @@ ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
 # docker swarm join --token <token_key> <MANAGER-IP>:2377
   eg.  docker swarm join --token SWMTKN-1-311yexx7jhkz07k99538zwhnc2n2yrxen0qljya2sl2l8v9svg-59obg4wfs5bda6lnkm85affxf 192.168.86.73:2377
 
-# docker swarm join-token manager
-  - show instruction on how to add a manager node
-  
 # docker node promote <node>
   - promote a node to manager
 
